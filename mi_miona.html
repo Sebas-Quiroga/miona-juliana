@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Juliana ❤️</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --rose: #c8445a;
+            --blush: #f5cdd8;
+            --cream: #fdf6f0;
+            --petal: #f9e4ec;
+            --gold: #c9a96e;
+            --deep: #3a1a22;
+            --shadow: rgba(58, 26, 34, 0.18);
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--petal) 100%);
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--deep);
+            overflow-x: hidden;
+            cursor: none;
+            transition: background 0.5s ease;
+        }
+        .music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: var(--blush);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        /* Custom cursor */
+        #cursor-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 1.1rem;
+            transform: translate(-50%, -50%);
+            user-select: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 15% 20%, #f9d0dd88 0%, transparent 60%),
+                radial-gradient(ellipse 50% 35% at 85% 75%, #f7c8d888 0%, transparent 60%),
+                radial-gradient(ellipse 40% 30% at 50% 50%, #fff0f488 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* ── FALLING HEARTS CANVAS ── */
+        .hearts-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-heart {
+            position: absolute;
+            top: -50px;
+            pointer-events: none;
+            user-select: none;
+            animation: fall-heart linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes fall-heart {
+            0% {
+                transform: translateY(0) rotate(-15deg) scale(1);
+                opacity: 0.85;
+            }
+
+            50% {
+                transform: translateY(50vh) rotate(15deg) scale(0.9);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(-10deg) scale(0.7);
+                opacity: 0;
+            }
+        }
+
+        /* Cursor-trail hearts */
+        .cursor-heart {
+            position: fixed;
+            pointer-events: none;
+            user-select: none;
+            z-index: 9998;
+            animation: burst-heart 0.85s ease-out forwards;
+        }
+
+        @keyframes burst-heart {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
+            }
+
+            40% {
+                opacity: 0.9;
+                transform: translate(-50%, -120%) scale(1.15) rotate(-12deg);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -230%) scale(0.5) rotate(18deg);
+            }
+        }
+
+        /* ── LAYOUT ── */
+        .page {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: clamp(1.5rem, 5vw, 3rem) 1rem clamp(3rem, 8vw, 5rem);
+        }
+
+        /* ── HEADER ── */
+        header {
+            text-align: center;
+            margin-bottom: clamp(1.5rem, 4vw, 2.8rem);
+            animation: fadeDown 1s ease both;
+            width: 100%;
+            position: relative;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 120px;
+            height: 4px;
+            background: var(--gold);
+            transform: translateX(-50%);
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+
+        .eyebrow {
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--rose);
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 8vw, 3.8rem);
+            font-weight: 700;
+            line-height: 1.05;
+            color: var(--deep);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        h1 em {
+            font-style: italic;
+            color: var(--rose);
+        }
+
+        .subtitle {
+            margin-top: 0.6rem;
+            font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+            font-style: italic;
+            color: #7a4a58;
+            font-weight: 300;
+        }
+
+        .date-ribbon {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 1rem;
+            padding: 0.4rem clamp(0.8rem, 3vw, 1.4rem);
+            border: 1px solid var(--gold);
+            border-radius: 2rem;
+            font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold);
+            animation: fadeDown 1s 0.3s ease both;
+        }
+
+        .date-ribbon::before,
+        .date-ribbon::after {
+            content: '✦';
+            font-size: 0.5rem;
+        }
+
+        /* ── CARD ── */
+        .card {
+            position: relative;
+            width: min(420px, 92vw);
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 8px 40px var(--shadow), 0 2px 8px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            animation: fadeUp 1s 0.5s ease both;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 60px var(--shadow), 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1.5px solid var(--gold);
+            border-radius: 2px;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        /* ── PHOTO ── */
+        .photo-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            background: var(--petal);
+            cursor: pointer; /* allow click change */
+            transition: transform 0.3s ease;
+        }
+
+        .photo-frame img,
+        .photo-frame .photo-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.9s ease, transform 0.3s ease;
+            transform: scale(1.04);
+            display: block;
+        }
+        .photo-frame .photo-video {
+            display: none;
+        }
+
+        .photo-frame img.fade-out {
+            opacity: 0;
+            transform: scale(1);
+        }
+
+        .photo-frame::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 55%;
+            background: linear-gradient(to top, rgba(20, 5, 10, 0.65) 0%, transparent 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* navigation arrows (hidden until hover) */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            width: 32px;
+            height: 32px;
+            margin-top: -16px;
+            background: rgba(0,0,0,0.4);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .nav-arrow.left { left: 10px; }
+        .nav-arrow.right { right: 10px; }
+        .photo-frame:hover .nav-arrow { opacity: 0.85; }
+
+        .photo-frame:hover img { transform: scale(1.06); }
+
+        .counter {
+            position: absolute;
+            bottom: 14px;
+            right: 16px;
+            z-index: 5;
+            font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.85);
+            background: rgba(0,0,0,0.3);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+        }
+
+        /* ── MESSAGE ── */
+        .message-area {
+            padding: clamp(1.2rem, 4vw, 1.8rem) clamp(1rem, 5vw, 2rem) clamp(1.5rem, 4vw, 2.2rem);
+            text-align: center;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .quote-mark {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 6vw, 3rem);
+            line-height: 0.5;
+            color: var(--blush);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        #mensaje {
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            line-height: 1.65;
+            color: #4a2430;
+            font-style: italic;
+            font-weight: 300;
+            max-width: 320px;
+            transition: opacity 0.6s ease;
+        }
+
+        #mensaje.fade-out {
+            opacity: 0;
+        }
+
+        .heart-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--blush);
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            margin-top: 0.2rem;
+        }
+
+        .heart-divider::before,
+        .heart-divider::after {
+            content: '';
+            height: 1px;
+            width: 35px;
+            background: linear-gradient(to right, transparent, var(--blush));
+        }
+
+        .heart-divider::after {
+            transform: scaleX(-1);
+        }
+
+        /* ── FOOTER ── */
+        .footer-note {
+            margin-top: clamp(1.5rem, 4vw, 2.5rem);
+            text-align: center;
+            font-size: clamp(0.8rem, 2vw, 0.85rem);
+            color: #b07a8a;
+            font-style: italic;
+            animation: fadeUp 1s 0.9s ease both;
+            line-height: 1.7;
+            max-width: 90%;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-note strong {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            color: var(--rose);
+        }
+
+        /* ── PROGRESS BAR ── */
+        .progress {
+            height: 2px;
+            background: var(--blush);
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--rose), var(--gold));
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 6px var(--rose);
+        }
+
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* rose animation for transition */
+        .rose-animation {
+            position: absolute;
+            font-size: 3rem;
+            transform: translate(-50%, -50%) scale(0.3);
+            opacity: 0;
+            animation: rosePop 1.2s ease-out forwards;
+            pointer-events: none;
+            z-index: 11;
+        }
+        @keyframes rosePop {
+            0% {transform: translate(-50%, -50%) scale(0.3) rotate(0deg); opacity:0;}
+            40% {transform: translate(-50%, -50%) scale(1.3) rotate(45deg); opacity:1;}
+            100% {transform: translate(-50%, -50%) scale(2) rotate(90deg); opacity:0;}
+        }
+        /* Touch devices: restore cursor, hide custom */
+        @media (hover: none) {
+            body {
+                cursor: auto;
+            }
+
+            #cursor-heart {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="cursor-heart">❤️</div>
+    <div class="hearts-canvas" id="heartsCanvas"></div>
+    <audio id="bgMusic" src="audio/musica.mp3" loop></audio>
+    <button id="musicToggle" class="music-toggle" title="activar/desactivar música">🔈</button>
+
+    <div class="page">
+        <header>
+            <p class="eyebrow">Feliz Día de la Mujer 💐</p>
+            <h1>Para <em>Juliana</em><br>Miona ❤️</h1>
+            <p class="subtitle">Desde que te conocí, mi vida es más bonita.</p>
+            <span class="date-ribbon">10 de marzo, 2024</span>
+        </header>
+
+        <div class="card">
+            <div class="photo-frame">
+                <!-- manual controls -->
+                <div class="nav-arrow left" id="prevArrow">❮</div>
+                <div class="nav-arrow right" id="nextArrow">❯</div>
+                <img id="foto" src="fotos/foto 1.jpg" alt="Foto">
+                <video id="clip" class="photo-video" muted playsinline></video>
+                <span class="counter" id="counter">1 / 189</span>
+            </div>
+            <div class="progress">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div class="message-area">
+                <span class="quote-mark">"</span>
+                <p id="mensaje">Cargando mensaje de amor…</p>
+                <div class="heart-divider">♥</div>
+            </div>
+        </div>
+
+        <p class="footer-note">
+            189 momentos contigo.<br>
+            <strong>Cada uno, un tesoro.</strong>
+        </p>
+    </div>
+
+    <script>
+        const heartEmojis = ['❤️', '🩷', '🌸', '💕', '💗', '💓', '💞', '🌹', '💘', '✨'];
+
+        /* ── 40 BACKGROUND FALLING HEARTS ── */
+        (function () {
+            const canvas = document.getElementById('heartsCanvas');
+            for (let i = 0; i < 40; i++) {
+                const h = document.createElement('span');
+                h.className = 'bg-heart';
+                h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                h.style.left = Math.random() * 100 + 'vw';
+                h.style.fontSize = (0.7 + Math.random() * 1.5) + 'rem';
+                h.style.animationDuration = (4 + Math.random() * 9) + 's';
+                h.style.animationDelay = (Math.random() * 14) + 's';
+                canvas.appendChild(h);
+            }
+        })();
+
+        /* ── CUSTOM CURSOR (desktop) ── */
+        const cursorEl = document.getElementById('cursor-heart');
+        document.addEventListener('mousemove', e => {
+            cursorEl.style.left = e.clientX + 'px';
+            cursorEl.style.top = e.clientY + 'px';
+        });
+
+        /* ── SPAWN TRAIL HEART ── */
+        let lastSpawn = 0;
+        function spawnHeart(x, y) {
+            const now = Date.now();
+            if (now - lastSpawn < 55) return;
+            lastSpawn = now;
+            const el = document.createElement('span');
+            el.className = 'cursor-heart';
+            el.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            el.style.fontSize = (0.75 + Math.random() * 0.9) + 'rem';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 900);
+        }
+
+        document.addEventListener('mousemove', e => spawnHeart(e.clientX, e.clientY));
+        document.addEventListener('touchmove', e => {
+            Array.from(e.touches).forEach(t => spawnHeart(t.clientX, t.clientY));
+        }, { passive: true });
+
+        /* Also spawn on tap */
+        document.addEventListener('touchstart', e => {
+            Array.from(e.touches).forEach(t => {
+                for (let i = 0; i < 4; i++) {
+                    setTimeout(() => spawnHeart(
+                        t.clientX + (Math.random() - 0.5) * 30,
+                        t.clientY + (Math.random() - 0.5) * 30
+                    ), i * 80);
+                }
+            });
+        }, { passive: true });
+
+        /* ── MEDIA COLLECTION ── */
+        const fotos = Array.from({ length: 189 }, (_, i) => `fotos/foto ${i + 1}.jpg`);
+        const videos = Array.from({ length: 24 }, (_, i) => `Videos/vide (${i + 1}).MP4`);
+        let fotoIndex = 0;
+        let videoIndex = 0;
+        let msgIndex = 0;
+
+        const mensajes = [
+            "Desde que te conocí, cada día tiene más color.",
+            "Tu sonrisa es lo primero que quiero ver cada mañana.",
+            "Gracias por llenar mi vida de momentos que atesoro.",
+            "Contigo el tiempo pasa demasiado rápido y demasiado bien.",
+            "Eres la persona con quien quiero compartir todos mis días.",
+            "Tu risa es mi canción favorita del mundo.",
+            "Cada foto contigo es un recuerdo que nunca quiero olvidar.",
+            "Me enamoré de ti sin darme cuenta, y fue lo mejor que pudo pasar.",
+            "Juliana, eres mi lugar favorito en el mundo.",
+            "Gracias por ser tú, exactamente como eres.",
+            "El 10 de marzo cambió mi vida para siempre.",
+            "No existe distancia ni tiempo que disminuya lo que siento por ti.",
+            "Eres mi calma y mi aventura al mismo tiempo.",
+            "Cada momento a tu lado vale más que todo lo demás.",
+            "Mi corazón eligió bien cuando te eligió a ti.",
+            "Eres la razón por la que sonrío sin motivo aparente.",
+            "Contigo aprendí que el amor también se siente en los detalles pequeños.",
+            "Tu presencia hace que todo sea más fácil y más hermoso.",
+            "Eres mi persona favorita en este y en cualquier universo.",
+            "Gracias por dejarme ser parte de tu historia, Miona. ❤️",
+            "Cada día contigo se siente como un regalo.",
+            "Eres el pensamiento bonito que siempre vuelve a mi mente.",
+            "Si la felicidad tuviera un rostro, sería el tuyo.",
+            "Tu mirada tiene la capacidad de calmar mi mundo.",
+            "Estar contigo es mi definición de paz.",
+            "No necesito nada más cuando estoy contigo.",
+            "Tu voz siempre encuentra la manera de alegrarme.",
+            "Cada recuerdo contigo es un tesoro.",
+            "Eres mi casualidad favorita.",
+            "Me encanta que existas en mi vida.",
+            "Tu forma de ser me inspira cada día.",
+            "Contigo todo parece tener más sentido.",
+            "Eres la historia más bonita que me ha pasado.",
+            "Si pudiera elegir de nuevo, te elegiría otra vez.",
+            "Tu amor es mi lugar seguro.",
+            "Cada día me enamoro un poco más de ti.",
+            "Eres mi pensamiento favorito antes de dormir.",
+            "Mi mundo cambió cuando apareciste.",
+            "Eres la mejor parte de mis días.",
+            "Tu felicidad también se volvió la mía.",
+            "Gracias por cada momento compartido.",
+            "Tu compañía siempre mejora cualquier día.",
+            "Eres mi coincidencia más hermosa.",
+            "Todo es mejor cuando estás cerca.",
+            "Tu sonrisa ilumina cualquier momento.",
+            "Me encanta caminar por la vida contigo.",
+            "Contigo aprendí lo que significa amar.",
+            "Eres el mejor capítulo de mi historia.",
+            "Tu presencia llena de calma mi vida.",
+            "Tu forma de mirar el mundo me encanta.",
+            "Cada instante contigo es especial.",
+            "Eres mi alegría diaria.",
+            "Tu cariño es mi refugio.",
+            "Eres mi lugar feliz.",
+            "Gracias por ser mi compañera.",
+            "Cada día contigo vale la pena.",
+            "Eres mi inspiración constante.",
+            "Tu amor hace que todo sea mejor.",
+            "Eres la mejor sorpresa que me dio la vida.",
+            "Contigo todo se siente correcto.",
+            "Tu sonrisa hace que todo valga la pena.",
+            "Eres la persona con quien quiero reír siempre.",
+            "Tu presencia llena mis días de luz.",
+            "Me encanta compartir la vida contigo.",
+            "Eres el pensamiento que siempre me alegra.",
+            "Cada momento contigo tiene magia.",
+            "Tu amor hace que todo sea más fácil.",
+            "Eres la calma en medio del caos.",
+            "Gracias por ser tan especial conmigo.",
+            "Tu risa siempre mejora mi día.",
+            "Eres la razón de muchas de mis sonrisas.",
+            "Tu compañía siempre me hace bien.",
+            "Eres un regalo que la vida me dio.",
+            "Cada día contigo es un buen día.",
+            "Tu amor llena mi corazón.",
+            "Tu presencia me hace feliz.",
+            "Eres lo mejor que me ha pasado.",
+            "Gracias por existir en mi vida.",
+            "Cada instante contigo vale oro.",
+            "Tu cariño es un tesoro.",
+            "Tu forma de ser me enamora.",
+            "Eres la mejor parte de mi historia.",
+            "Contigo todo tiene más sentido.",
+            "Tu amor es mi motivación.",
+            "Eres mi alegría constante.",
+            "Tu presencia ilumina mi camino.",
+            "Gracias por cada sonrisa que me regalas.",
+            "Tu compañía hace todo mejor.",
+            "Eres mi mejor coincidencia.",
+            "Contigo todo se siente bien.",
+            "Tu amor llena mis días.",
+            "Eres mi felicidad diaria.",
+            "Gracias por cada momento juntos.",
+            "Eres mi mejor recuerdo.",
+            "Tu cariño es mi alegría.",
+            "Eres la razón de mi tranquilidad.",
+            "Contigo todo es más bonito.",
+            "Tu sonrisa es mi favorita.",
+            "Eres mi persona especial.",
+            "Tu presencia me da paz.",
+            "Cada día contigo es un nuevo recuerdo.",
+            "Eres el detalle más bonito de mi vida.",
+            "Tu amor hace todo mejor.",
+            "Contigo cada momento es único.",
+            "Eres mi historia favorita.",
+            "Tu risa es música para mí.",
+            "Eres mi mejor compañía.",
+            "Gracias por tanto cariño.",
+            "Eres la persona que quiero siempre cerca.",
+            "Tu amor es mi alegría.",
+            "Cada instante contigo es especial.",
+            "Eres la razón de muchas sonrisas.",
+            "Tu presencia siempre me calma.",
+            "Contigo todo es más feliz.",
+            "Eres mi felicidad sencilla.",
+            "Tu amor llena mi vida.",
+            "Eres mi lugar seguro.",
+            "Tu compañía es lo mejor.",
+            "Eres mi alegría constante.",
+            "Gracias por cada recuerdo.",
+            "Tu amor hace todo más bonito.",
+            "Eres mi persona favorita.",
+            "Tu sonrisa siempre ilumina.",
+            "Contigo la vida se siente mejor.",
+            "Eres mi momento favorito.",
+            "Tu cariño me hace feliz.",
+            "Eres lo mejor de mi día.",
+            "Contigo todo vale la pena.",
+            "Eres mi calma.",
+            "Tu presencia me alegra.",
+            "Eres mi felicidad.",
+            "Tu amor me inspira.",
+            "Eres mi mejor momento.",
+            "Tu cariño es especial.",
+            "Eres mi alegría.",
+            "Tu sonrisa es perfecta.",
+            "Eres mi paz.",
+            "Tu amor me llena.",
+            "Eres mi felicidad diaria.",
+            "Gracias por existir.",
+            "Eres mi razón para sonreír.",
+            "Tu presencia siempre alegra mi día.",
+            "Eres la historia que quiero seguir escribiendo.",
+            "Cada recuerdo contigo es único.",
+            "Tu amor es mi mejor compañía.",
+            "Eres mi alegría inesperada.",
+            "Tu risa es mi sonido favorito.",
+            "Eres la mejor casualidad.",
+            "Tu presencia llena de calma mi corazón.",
+            "Eres mi momento favorito del día.",
+            "Gracias por cada instante compartido.",
+            "Tu amor me hace sentir completo.",
+            "Eres mi pensamiento bonito.",
+            "Tu cariño es mi felicidad.",
+            "Eres mi mejor recuerdo.",
+            "Tu presencia siempre me calma.",
+            "Eres la razón de muchas sonrisas.",
+            "Tu amor es mi lugar favorito.",
+            "Gracias por hacer mi vida más bonita."
+
+        ];
+        const INTERVAL = 5000;
+        const bar = document.getElementById('progressBar');
+        let startTime = Date.now();
+        let autoTimer = null;
+        
+        function showRoseAnim() {
+            const frame = document.querySelector('.photo-frame');
+            const flowers = ['🌹','🌸','🌺','💐'];
+            for (let i = 0; i < 6; i++) {
+                const r = document.createElement('span');
+                r.className = 'rose-animation';
+                r.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+                // random offset around center
+                r.style.left = 50 + (Math.random() * 40 - 20) + '%';
+                r.style.top = 50 + (Math.random() * 40 - 20) + '%';
+                frame.appendChild(r);
+                setTimeout(() => r.remove(), 1200);
+            }
+        }
+
+        function animateBar() {
+            const pct = Math.min(((Date.now() - startTime) / INTERVAL) * 100, 100);
+            bar.style.width = pct + '%';
+            if (pct < 100) requestAnimationFrame(animateBar);
+        }
+
+        function cambiarContenido(direction = 1) {
+            // show roses before changing
+            showRoseAnim();
+            // burst hearts around center
+            const rect = document.querySelector('.photo-frame').getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => spawnHeart(
+                    cx + (Math.random() - 0.5) * 100,
+                    cy + (Math.random() - 0.5) * 100
+                ), i * 50);
+            }
+            // direction 1 for next, -1 for previous
+            const imgEl = document.getElementById('foto');
+            const vidEl = document.getElementById('clip');
+            const mensajeEl = document.getElementById('mensaje');
+            const counterEl = document.getElementById('counter');
+            
+            // fade out visible media and message
+            imgEl.classList.add('fade-out');
+            vidEl.classList.add('fade-out');
+            mensajeEl.classList.add('fade-out');
+            
+            setTimeout(() => {
+                // pick whether to show photo or video (15% video chance)
+                const showVideo = Math.random() < 0.15 && videos.length > 0;
+                if (showVideo) {
+                    vidEl.src = videos[videoIndex];
+                    vidEl.style.display = 'block';
+                    imgEl.style.display = 'none';
+                    vidEl.currentTime = 0;
+                    vidEl.play().catch(() => {});
+                    counterEl.textContent = `🎥 ${videoIndex + 1} / ${videos.length}`;
+                    videoIndex = (videoIndex + direction + videos.length) % videos.length;
+                } else {
+                    imgEl.src = fotos[fotoIndex];
+                    imgEl.style.display = 'block';
+                    vidEl.style.display = 'none';
+                    vidEl.pause();
+                    counterEl.textContent = `${fotoIndex + 1} / ${fotos.length}`;
+                    fotoIndex = (fotoIndex + direction + fotos.length) % fotos.length;
+                }
+                
+                msgIndex = (msgIndex + direction + mensajes.length) % mensajes.length;
+                mensajeEl.textContent = mensajes[msgIndex];
+                
+                imgEl.classList.remove('fade-out');
+                vidEl.classList.remove('fade-out');
+                mensajeEl.classList.remove('fade-out');
+                
+                // reset progress bar animation
+                bar.style.transition = 'none';
+                bar.style.width = '0%';
+                startTime = Date.now();
+                requestAnimationFrame(() => { bar.style.transition = ''; animateBar(); });
+            }, 500);
+        }
+
+        // start auto cycle
+        function startAutoCycle() {
+            if (autoTimer) clearInterval(autoTimer);
+            autoTimer = setInterval(() => cambiarContenido(1), INTERVAL);
+        }
+        cambiarContenido();
+        startAutoCycle();
+
+        // manual controls: clicking photo or arrows
+        const photoFrame = document.querySelector('.photo-frame');
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        musicToggle.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play().catch(() => {});
+                musicToggle.textContent = '🔊';
+            } else {
+                bgMusic.pause();
+                musicToggle.textContent = '🔈';
+            }
+        });
+        photoFrame.addEventListener('click', () => {
+            // start music on first interaction
+            if (bgMusic.paused) {
+                bgMusic.play().catch(() => {});
+                musicToggle.textContent = '🔊';
+            }
+            cambiarContenido(1);
+            startAutoCycle();
+        });
+        document.getElementById('nextArrow').addEventListener('click', e => {
+            e.stopPropagation();
+            cambiarContenido(1);
+            startAutoCycle();
+        });
+        document.getElementById('prevArrow').addEventListener('click', e => {
+            e.stopPropagation();
+            cambiarContenido(-1);
+            startAutoCycle();
+        });
+    </script>
+</body>
+
+</html>
